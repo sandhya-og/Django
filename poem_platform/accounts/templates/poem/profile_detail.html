@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>{{ profile.user.username }}</h2>
+    {% if profile.avatar %}
+        <img src="{{ profile.avatar.url }}" alt="Profile Picture">
+    {% else %}
+        <img src="{% static 'D:\Django\poem_platform\accounts\static\avatar.png' %}" alt="Default Profile Picture">  <!-- Provide path to default avatar -->
+    {% endif %}
+    <p>{{ profile.bio }}</p>
+    <h3>User's Poems</h3>
+    <ul>
+        {% for poem in poems %}
+        <li>
+            <a href="{% url 'poem_detail' pk=poem.pk %}">{{ poem.title }}</a>
+            <p>Created on: {{ poem.created_at }}</p>
+            {% if request.user == poem.author %}
+                <button onclick="window.location.href='{% url 'edit_poem' pk=poem.pk %}'">Edit</button>
+            {% endif %}
+
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Search Results</h2>
+    <ul>
+        {% for poem in poems %}
+        <li>
+            <a href="{% url 'poem_detail' pk=poem.pk %}">{{ poem.title }}</a> - {{ poem.author.username }}
+        </li>
+        {% empty %}
+        <li>No results found</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

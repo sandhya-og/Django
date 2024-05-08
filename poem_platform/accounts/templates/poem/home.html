@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Recent Poems</h2>
+    <ul>
+        {% for poem in recent_poems %}
+        <li>
+            <h3><a href="{% url 'poem_detail' pk=poem.pk %}">{{ poem.title }}</a></h3>
+            <p>{{ poem.content|truncatewords:50 }}</p>
+            <p>Author: <a href="{% url 'profile_detail' username=poem.author.username %}">{{ poem.author.username }}</a></p>
+            <p>Created on: {{ poem.created_at }}</p>
+            <p>Likes: {{ poem.likes.count }}</p>
+            <form method="post" action="{% url 'like_poem' pk=poem.pk %}">
+                {% csrf_token %}
+                <button type="submit">
+                    {% if request.user in poem.likes.all %}
+                        Unlike
+                    {% else %}
+                        Like
+                    {% endif %}
+                </button>
+                Likes: {{ poem.likes.count }}
+            </form>
+            
+            <h4>Comments</h4>
+            <ul>
+                {% for comment in comments %}
+                    <li>{{ comment.author.username }}: {{ comment.content }}</li>
+                {% endfor %}
+            </ul>
+            <form method="post" action="{% url 'add_comment' pk=poem.pk %}">
+                {% csrf_token %}
+                <textarea name="content" placeholder="Add a comment..." required></textarea>
+                <button type="submit">Add Comment</button>
+            </form>                      
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
